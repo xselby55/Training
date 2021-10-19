@@ -1,0 +1,76 @@
+package Test;
+
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.openqa.selenium.WebDriver;
+import org.testng.annotations.*;
+import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.By;
+
+public class TestNG {
+	public String baseUrl = "https://igniteflix.co.za/user/login/";
+	String driverpath = "C:\\chromedriver.exe";
+	public WebDriver driver;
+	
+	
+	@BeforeClass
+	public void startDrivers() {
+		driver = new ChromeDriver();
+		driver.get(baseUrl);
+		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+		System.setProperty("webdriver.chrome.driver", driverpath);
+		
+		driver.manage().window().maximize();
+		WebElement email = driver.findElement(By.xpath("//input[@id='login_email']"));
+		WebElement password = driver.findElement(By.xpath("//input[@id='login_password']"));
+		WebElement login = driver.findElement(By.xpath("//button[@id='submit-btn']"));
+		email.sendKeys("test314@test.com");
+		password.sendKeys("Password123");
+		login.click();
+	}
+
+	@Test
+	public void editProfile() throws InterruptedException {
+		
+		driver.navigate().to("https://igniteflix.co.za/my-account/update");
+		driver.manage().window().maximize();
+
+		// Sending the key elements on the fields
+		driver.findElement(By.xpath("//*[@id=\"avatar\"]"))
+				.sendKeys(""); //send the image path e.g. C:\\Users\Desktop\mylife.jpeg
+		WebElement name =driver.findElement(By.xpath("//*[@id=\"full_name\"]"));
+		WebElement number =driver.findElement(By.xpath("//*[@id=\"phone\"]"));
+		WebElement dateOfBirth = driver.findElement(By.xpath("//*[@id=\"dob\"]"));
+		
+		name.clear();
+		name.sendKeys(""); //Full names
+		number.clear();
+		number.sendKeys("0830000000"); // mobile number
+		dateOfBirth.clear();
+		dateOfBirth.sendKeys("99-11-02"); // date of birth
+		
+		driver.findElement(By.xpath("//*[@id=\"profile-form\"]/div[7]/div/button")).click();
+		driver.findElement(By.xpath("//*[@id=\"profile-form\"]/div[7]/div/button")).click();
+		driver.findElement(By.xpath("/html/body/div[3]/div/button[1]")).click();
+		Thread.sleep(2000);
+		driver.close();
+	}
+	@Test
+	public void changePassword() {
+		
+		driver.navigate().to("https://igniteflix.co.za/my-account/change-password");
+        driver.manage().window().maximize();
+        driver.findElement(By.xpath("//input[@name='password']")).sendKeys("Password12345"); //old password
+        driver.findElement(By.xpath("//input[@name='new_password']")).sendKeys("Password123456"); //new password
+        driver.findElement(By.xpath("//input[@name='retype_new_password']")).sendKeys("Password123456"); //confirm new password
+        driver.findElement(By.xpath("//*[@id=\"profile-form\"]/div[4]/div/button")).click();
+		driver.close();
+
+	}
+	@AfterClass
+	public void exit() {
+		driver.close();
+	}
+
+}
