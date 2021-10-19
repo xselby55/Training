@@ -25,8 +25,8 @@ public class TestNG {
 		WebElement email = driver.findElement(By.xpath("//input[@id='login_email']"));
 		WebElement password = driver.findElement(By.xpath("//input[@id='login_password']"));
 		WebElement login = driver.findElement(By.xpath("//button[@id='submit-btn']"));
-		email.sendKeys("test314@test.com");
-		password.sendKeys("Password123");
+		email.sendKeys(""); //username
+		password.sendKeys(""); //Password
 		login.click();
 	}
 
@@ -61,9 +61,9 @@ public class TestNG {
 		
 		driver.navigate().to("https://igniteflix.co.za/my-account/change-password");
         driver.manage().window().maximize();
-        driver.findElement(By.xpath("//input[@name='password']")).sendKeys("Password12345"); //old password
-        driver.findElement(By.xpath("//input[@name='new_password']")).sendKeys("Password123456"); //new password
-        driver.findElement(By.xpath("//input[@name='retype_new_password']")).sendKeys("Password123456"); //confirm new password
+        driver.findElement(By.xpath("//input[@name='password']")).sendKeys(""); //old password
+        driver.findElement(By.xpath("//input[@name='new_password']")).sendKeys(""); //new password
+        driver.findElement(By.xpath("//input[@name='retype_new_password']")).sendKeys(""); //confirm new password
         driver.findElement(By.xpath("//*[@id=\"profile-form\"]/div[4]/div/button")).click();
 		driver.close();
 
