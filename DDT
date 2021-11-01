@@ -1,0 +1,123 @@
+package NG_Testing;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.*;
+
+public class FunctionTest {
+
+	WebDriver driver;
+	public String loginURL = "http://automationpractice.com/index.php?controller=authentication&back=my-account";
+	public String category ="http://automationpractice.com/index.php?id_category=3&controller=category";
+	public String path = "C:\\Users\\Sinethemba\\Documents\\Excell\\Test.xlsx";
+	XLUtility xlutil = new XLUtility(path);
+
+	@SuppressWarnings({ "deprecation" })
+	@BeforeClass
+	public void setup() {
+		System.setProperty("webdriver.chrome.driver", "C:\\chromedriver.exe");
+		driver = new ChromeDriver();
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		driver.manage().window().maximize();
+		
+		//Login
+		driver.get(loginURL);
+		driver.findElement(By.xpath("//*[@id=\"email\"]")).sendKeys("mamosaanna77@gmail.com");
+		driver.findElement(By.xpath("//*[@id=\"passwd\"]")).sendKeys("Prince@1");
+		driver.findElement(By.xpath("//*[@id=\"SubmitLogin\"]")).click();
+		try {
+			xlutil.setCellData("Sheet1", 5, 7, "Pass");
+			System.out.println("Pass");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void addtoCart() {
+		driver.get(category);
+		driver.findElement(By.xpath("//*[@id=\"center_column\"]/ul/li[1]/div/div[2]/h5/a")).click();
+		driver.findElement(By.xpath("/html/body/div/div[2]/div/div[3]/div/div/div/div[4]/form/div/div[3]/div[1]/p/button/span")).click();
+		//driver.close();
+		try {
+			xlutil.setCellData("Sheet1", 6, 9, "Pass");
+			xlutil.setCellData("Sheet1", 6, 8, "Run as expected");
+			System.out.println("Pass");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	@Test
+	public void checkout() {
+		String title = "Order confirmation - My Store";
+		String actualTitle = "";
+		//Checkout
+		driver.get("http://automationpractice.com/index.php?id_product=1&controller=product");
+		driver.findElement(By.name("Submit")).click();
+		driver.findElement(By.xpath("//*[@id=\"layer_cart\"]/div[1]/div[2]/div[4]/a")).click();
+		driver.findElement(By.xpath("//*[@id=\"center_column\"]/p[2]/a[1]/span")).click();
+		driver.findElement(By.name("processAddress")).click();
+		driver.findElement(By.name("cgv")).click();
+		driver.findElement(By.name("processCarrier")).click();
+		
+		//Confirm payment order
+		driver.findElement(By.xpath("//*[@id=\"HOOK_PAYMENT\"]/div[1]/div/p/a")).click();
+		driver.findElement(By.xpath("/html/body/div/div[2]/div/div[3]/div/form/p/button/span")).click();
+		actualTitle =driver.getTitle();
+		if(title.equals(actualTitle)) {
+			try {
+				xlutil.setCellData("Sheet1", 9, 7, "Pass");
+				xlutil.setCellData("Sheet1", 10, 7, "Pass");
+				xlutil.setCellData("Sheet1", 9, 6, "Run as expected");
+				xlutil.setCellData("Sheet1", 10, 6, "Run as expected");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}else {
+			try {
+				xlutil.setCellData("Sheet1", 9, 7, "Fail");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		//driver.close();
+	}
+	@Test
+	public void viewOrder() {
+		String home ="http://automationpractice.com/index.php?controller=my-account";
+		driver.get(home);
+		driver.findElement(By.xpath("//*[@id=\"center_column\"]/div/div[1]/ul/li[1]/a/i")).click();
+		
+		String title = "Order history - My Store";
+		String actualTitle = "";
+		
+		actualTitle =driver.getTitle();
+		if(title.equals(actualTitle)) {
+			try {
+				xlutil.setCellData("Sheet1", 11, 7, "Pass");
+				xlutil.setCellData("Sheet1", 11, 6, "Run as expected");
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else {
+			System.out.println("Fail");
+		}
+		//driver.close();
+	}
+	
+	public void bye() {
+		driver.close();
+	}
+	
+
+}
